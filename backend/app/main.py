@@ -12,6 +12,9 @@ from typing import List, Dict, Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Import route modules
+from app.routes import auth, trading
+
 # Initialize FastAPI app
 app = FastAPI(title="HedgeX Local API", version="3.0")
 
@@ -90,11 +93,13 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     )
 
 # Import and include other route modules
-from .routes import auth, trading, watchlist
+from app.routes import auth, trading
+# Note: watchlist module appears to be imported but not yet created
 
 app.include_router(auth.router, prefix="/auth", tags=["authentication"])
 app.include_router(trading.router, prefix="/trading", tags=["trading"])
-app.include_router(watchlist.router, prefix="/watchlist", tags=["watchlist"])
+# Commented out until watchlist module is created
+# app.include_router(watchlist.router, prefix="/watchlist", tags=["watchlist"])
 
 if __name__ == "__main__":
     import uvicorn

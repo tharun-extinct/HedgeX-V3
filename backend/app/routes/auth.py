@@ -5,6 +5,19 @@ import sqlite3
 from typing import Optional
 import bcrypt
 import jwt
+from pathlib import Path
+
+# Use Dependency from FastAPI to get database connection
+def get_db():
+    conn = sqlite3.connect(str(DB_PATH))
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+# SQLite database setup and path
+DB_PATH = Path.home() / ".hedgex" / "data.db"
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 from datetime import datetime, timedelta
 
 router = APIRouter()
