@@ -42,21 +42,29 @@ export const authService = {
         }
 
         return response.json();
-    },
-
-    // Store the token
-    setToken(token: string) {
-        localStorage.setItem('token', token);
+    },    // Store the token
+    async setToken(token: string) {
+        // @ts-ignore - Chrome API
+        await chrome.storage.local.set({ authToken: token });
+        // Notify background script
+        // @ts-ignore - Chrome API
+        await chrome.runtime.sendMessage({ type: 'SET_AUTH_TOKEN', token });
     },
 
     // Get the stored token
-    getToken(): string | null {
-        return localStorage.getItem('token');
+    async getToken(): Promise<string | null> {
+        // @ts-ignore - Chrome API
+        const result = await chrome.storage.local.get(['authToken']);
+        return result.authToken || null;
     },
 
     // Remove the token
-    removeToken() {
-        localStorage.removeItem('token');
+    async removeToken() {
+        // @ts-ignore - Chrome API
+        await chrome.storage.local.remove('authToken');
+        // Notify background script
+        // @ts-ignore - Chrome API
+        await chrome.runtime.sendMessage({ type: 'LOGOUT' });
     },
 
     // Check if user is authenticated

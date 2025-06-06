@@ -2,11 +2,11 @@
   "name": "vite_react_shadcn_ts",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "scripts": {
+  "type": "module",  "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:extension": "vite build && tsc scripts/build-extension.ts --outDir dist/scripts && node dist/scripts/build-extension.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

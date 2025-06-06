@@ -1,0 +1,93 @@
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import '@/styles/popup.css';
+
+interface SystemInfo {
+  enabled: boolean;
+  connected: boolean;
+  browser: string;
+  hostname: string;
+}
+
+export function PopupMenu() {
+  const [systemInfo, setSystemInfo] = useState<SystemInfo>({
+    enabled: true,
+    connected: false,
+    browser: 'Unknown',
+    hostname: 'Unknown',
+  });
+
+  useEffect(() => {
+    const fetchSystemInfo = async () => {
+      // Get browser info
+      const userAgent = navigator.userAgent;
+      let browser = 'Unknown';
+      if (userAgent.includes('Chrome')) browser = 'Chrome';
+      else if (userAgent.includes('Firefox')) browser = 'Firefox';
+      else if (userAgent.includes('Edge')) browser = 'Edge';
+
+      // Check connection to backend
+      let connected = false;
+      try {
+        const response = await fetch('http://localhost:8000/health');
+        connected = response.ok;
+      } catch (error) {
+        console.error('Connection check failed:', error);
+      }
+
+      // Get hostname
+      const hostname = location.hostname || 'STARKツ555';
+
+      setSystemInfo({
+        enabled: true,
+        connected,
+        browser,
+        hostname,
+      });
+    };
+
+    fetchSystemInfo();
+  }, []);
+
+  const handleOpenApp = () => {
+    // @ts-ignore - Chrome API
+    chrome.tabs.create({ 
+      // @ts-ignore - Chrome API
+      url: chrome.runtime.getURL('index.html')
+    });
+  };
+
+  return (
+    <div className="popup-container">
+      <div className="popup-header">
+        <span className="popup-title">HedgeX</span>
+        <Button 
+          onClick={handleOpenApp}
+          size="sm"
+          variant="outline"
+          className="h-7 px-2 text-xs"
+        >
+          Open App ↗
+        </Button>
+      </div>
+      <div className="popup-content">
+        <div className="popup-row">
+          <span className="popup-label">Enabled:</span>
+          <span className="popup-value">{systemInfo.enabled ? '✅' : '❌'}</span>
+        </div>
+        <div className="popup-row">
+          <span className="popup-label">Connected:</span>
+          <span className="popup-value">{systemInfo.connected ? '✔' : '✘'}</span>
+        </div>
+        <div className="popup-row">
+          <span className="popup-label">Browser:</span>
+          <span className="popup-value">{systemInfo.browser}</span>
+        </div>
+        <div className="popup-row">
+          <span className="popup-label">Hostname:</span>
+          <span className="popup-value">{systemInfo.hostname}</span>
+        </div>
+      </div>
+    </div>
+  );
+}

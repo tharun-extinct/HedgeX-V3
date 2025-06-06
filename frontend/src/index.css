@@ -3,6 +3,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Extension popup dimensions */
+body {
+  width: 800px;
+  height: 600px;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Extension specific styles */
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 @layer base {
   :root {
     --background: 210 40% 98%;

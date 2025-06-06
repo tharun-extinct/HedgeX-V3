@@ -1,0 +1,84 @@
+/* Reset and base styles */
+:root {
+  --background: #ffffff;
+  --foreground: #09090b;
+  --border: #e4e4e7;
+  --muted: #a1a1aa;
+  --accent: #18181b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #09090b;
+    --foreground: #ffffff;
+    --border: #27272a;
+    --muted: #71717a;
+    --accent: #f4f4f5;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 280px;
+  height: 160px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Popup layout */
+.popup-container {
+  height: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.popup-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.popup-content {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.popup-label {
+  color: var(--muted);
+}
+
+.popup-value {
+  font-weight: 500;
+}
+
+/* Status indicators */
+.status-indicator {
+  @apply inline-block w-2 h-2 rounded-full;
+}
+
+.status-enabled {
+  @apply bg-green-500;
+}
+
+.status-disabled {
+  @apply bg-red-500;
+}

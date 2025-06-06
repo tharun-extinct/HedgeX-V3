@@ -57,6 +57,20 @@ backend/dist/
 frontend/dist/
 *.spec
 
+# PyInstaller build artifacts
+backend/build/
+*.exe
+*.dll
+*.pyd
+*.manifest
+*.toc
+*.zip
+*.pyz
+base_library.zip
+warn-*.txt
+xref-*.html
+localpycs/
+
 # IDE specific files
 .idea/
 .vscode/*
