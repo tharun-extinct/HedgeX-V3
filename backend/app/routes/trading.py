@@ -1,10 +1,40 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 import sqlite3
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 import json
-from ..services.trading_bot import TradingBot
 import logging
+from pathlib import Path
+
+# SQLite database setup
+DB_PATH = Path.home() / ".hedgex" / "data.db"
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+def get_db():
+    conn = sqlite3.connect(str(DB_PATH))
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+# Simple TradingBot class for now
+class TradingBot:
+    def __init__(self, user_id: int, settings: Dict[str, Any]):
+        self.user_id = user_id
+        self.settings = settings
+        self.is_running = False
+
+    def start(self):
+        self.is_running = True
+
+    def stop(self):
+        self.is_running = False
+
+    def get_status(self) -> Dict[str, Any]:
+        return {
+            "is_running": self.is_running,
+            "settings": self.settings
+        }
 from datetime import datetime
 
 router = APIRouter()
