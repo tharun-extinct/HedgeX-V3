@@ -7,7 +7,17 @@ dist-ssr/
 .env.*
 !.env.example
 
+# Node/Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.*
+!.env.example
+
 # Logs
+logs/
 logs/
 *.log
 npm-debug.log*
@@ -15,16 +25,56 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+trading_bot.log
+trading_output.txt
 
-node_modules
-dist
-dist-ssr
-*.local
+# Python/Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+venv/
+.venv/
+ENV/
 
-# Editor directories and files
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Distribution / packaging
+backend/dist/
+frontend/dist/
+*.spec
+
+# IDE specific files
+.idea/
 .vscode/*
 !.vscode/extensions.json
-.idea
+!.vscode/settings.json
+.vs/
+*.swp
+*.swo
 .DS_Store
 *.suo
 *.ntvs*
@@ -102,3 +152,8 @@ tmp/
 *.zip
 *.tar.gz
 *.rar
+
+
+# Ignore everything in the folder
+/backend/temp-Trading bot/*
+backend/temp-Trading bot/
