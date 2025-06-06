@@ -43,11 +43,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     }
   }, []);
-
   // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      const response = await authService.login(email, password);
+      authService.setToken(response.access_token);
+      
+      // Get user info from token or separate API call
+      const user = { email }; // You can decode JWT to get more user info
+      setUser(user);
+      setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      toast({
+        title: "Success",
+        description: "Logged in successfully",
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to log in. Please check your credentials.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
     
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     const foundUser = users.find((u: any) => u.email === email && u.password === password);
