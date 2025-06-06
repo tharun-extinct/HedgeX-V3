@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+<<<<<<< HEAD
   },  build: {
     outDir: 'dist',
     emptyOutDir: true,
@@ -47,6 +48,8 @@ export default defineConfig(({ mode }) => ({
       }
     },
     chunkSizeWarningLimit: 1000,
+=======
+>>>>>>> e021f8e0cf4115041d1695f40cdd46168b0af44b
   },
   plugins: [
     react(),

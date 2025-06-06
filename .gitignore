@@ -15,16 +15,35 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-trading_bot.log
-trading_output.txt
 
-# Python/Backend
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build outputs
+dist/
+build/
+*.exe
+*.spec
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
 develop-eggs/
 downloads/
 eggs/
@@ -38,72 +57,48 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
-.pytest_cache/
-.coverage
-htmlcov/
-.env
-venv/
-.venv/
-ENV/
 
-# SQLite database files
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+
+# Database
 *.db
 *.sqlite
 *.sqlite3
 
-# Distribution / packaging
-backend/dist/
-frontend/dist/
-*.spec
+# Logs
+*.log
+*.log.*
+logs/
+log/
 
-# PyInstaller build artifacts
-backend/build/
-*.exe
-*.dll
-*.pyd
-*.manifest
-*.toc
-*.zip
-*.pyz
-base_library.zip
-warn-*.txt
-xref-*.html
-localpycs/
-
-# IDE specific files
+# IDE
 .idea/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-.vs/
+.vscode/
 *.swp
 *.swo
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
-# Temporary files
-*.tmp
-*.bak
-*.cache
+# Distribution
+backend/dist/
+frontend/dist/
+*.pyd
+*.dll
 
-# Trading bot specific
-Trading bot/*.json
-Trading bot/data/
-Trading bot/logs/
+# Temp files
+temp/
+tmp/
+.temp/
+.tmp/
 
-# Local SSL certificates
-*.pem
-*.key
-*.crt
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Large media files
+*.mp4
+*.mov
+*.wmv
+*.avi
+*.zip
+*.tar.gz
+*.rar

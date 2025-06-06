@@ -1,4 +1,5 @@
 from PyInstaller.utils.hooks import collect_dynamic_libs
+<<<<<<< HEAD
 import os
 from pathlib import Path
 
@@ -23,3 +24,11 @@ def hook(hook_api):
     hiddenimports = ['sqlite3', '_sqlite3']
     
     return [], binaries, hiddenimports
+=======
+
+# Get the SQLite DLLs
+binaries = collect_dynamic_libs('sqlite3')
+
+# This ensures sqlite3.dll and its dependencies are included
+hiddenimports = ['sqlite3']
+>>>>>>> e021f8e0cf4115041d1695f40cdd46168b0af44b

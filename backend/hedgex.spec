@@ -5,6 +5,7 @@ from pathlib import Path
 
 # Get required DLL paths from Anaconda installation
 anaconda_path = Path(os.path.expanduser("~")) / "anaconda3"
+<<<<<<< HEAD
 dll_path = anaconda_path / "Library" / "bin"
 dlls_path = anaconda_path / "DLLs"
 
@@ -25,6 +26,23 @@ if python_dll.exists():
 
 # Combine all binaries
 binaries = dll_binaries
+=======
+dll_paths = {
+    'sqlite3.dll': anaconda_path / "Library" / "bin" / "sqlite3.dll",
+    'libcrypto-3.dll': anaconda_path / "Library" / "bin" / "libcrypto-3.dll",
+    'libssl-3.dll': anaconda_path / "Library" / "bin" / "libssl-3.dll",
+    'libffi-8.dll': anaconda_path / "Library" / "bin" / "libffi-8.dll",
+    'zlib.dll': anaconda_path / "Library" / "bin" / "zlib.dll",
+    '_ctypes.pyd': anaconda_path / "DLLs" / "_ctypes.pyd",
+    'libexpat.dll': anaconda_path / "Library" / "bin" / "libexpat.dll",
+    'libbz2.dll': anaconda_path / "Library" / "bin" / "libbz2.dll",
+    'liblzma.dll': anaconda_path / "Library" / "bin" / "liblzma.dll",
+    'api-ms-win-core-path-l1-1-0.dll': anaconda_path / "Library" / "bin" / "api-ms-win-core-path-l1-1-0.dll"
+}
+
+# Convert paths to strings and create binaries list
+binaries = [(str(path), '.') for path in dll_paths.values() if path.exists()]
+>>>>>>> e021f8e0cf4115041d1695f40cdd46168b0af44b
 
 block_cipher = None
 
