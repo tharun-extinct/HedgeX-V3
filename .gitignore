@@ -162,3 +162,14 @@ backend/temp-Trading bot/
 venv/
 backend/venv/
 **/venv/
+
+# PyInstaller build directories
+backend/build/
+backend/dist/
+*.spec
+
+# Other Python build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
