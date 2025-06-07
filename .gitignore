@@ -157,3 +157,8 @@ tmp/
 # Ignore everything in the folder
 /backend/temp-Trading bot/*
 backend/temp-Trading bot/
+
+# Python virtual environments
+venv/
+backend/venv/
+**/venv/
