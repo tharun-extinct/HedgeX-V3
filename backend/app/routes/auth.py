@@ -76,6 +76,7 @@ async def register(user: UserCreate, db: sqlite3.Connection = Depends(get_db)):
     
     # Hash password and store user
     hashed_password = get_password_hash(user.password)
+    print("fsdfef email")
     cursor.execute(
         "INSERT INTO users (email, name, password_hash) VALUES (?, ?, ?)",
         (user.email, user.name, hashed_password)

@@ -28,7 +28,7 @@ const App = () => (
         <HashRouter>
           <div className="extension-container">            <Routes>
               <Route 
-                path="/" 
+                path="/dashboard" 
                 element={
                   <ProtectedRoute>
                     <Dashboard />

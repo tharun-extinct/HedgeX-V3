@@ -37,12 +37,12 @@ export const authService = {
             },
             body: JSON.stringify(data),
         });
-        console.log(response.json(),'fsdf');
+       const responseData = await response.json()
         if (!response.ok) {
             throw new Error('Registration failed');
         }
         
-        return response.json();
+        return responseData
     },    // Store the token
     setToken(token: string) {
         // This method is kept for compatibility but SessionManager handles storage
