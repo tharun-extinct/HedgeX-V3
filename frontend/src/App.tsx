@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,8 +26,7 @@ const App = () => (
     <AuthProvider>
       <TooltipProvider>
         <HashRouter>
-          <div className="extension-container">
-            <Routes>
+          <div className="extension-container">            <Routes>
               <Route 
                 path="/" 
                 element={
@@ -42,6 +42,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Account />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
                   </ProtectedRoute>
                 } 
               />

@@ -27,14 +27,14 @@
       ],
       "matches": ["<all_urls>"]
     }
-  ],
-  "permissions": [
+  ],  "permissions": [
     "storage",
     "tabs",
     "identity"
   ],
   "host_permissions": [
-    "http://localhost:8000/*"
+    "http://localhost:8000/*",
+    "https://api.kite.trade/*"
   ],
   "background": {
     "service_worker": "background.js",
