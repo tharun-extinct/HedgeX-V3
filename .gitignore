@@ -54,6 +54,8 @@ MANIFEST
 htmlcov/
 .env
 venv/
+backend/venv/
+**/venv/
 .venv/
 ENV/
 
