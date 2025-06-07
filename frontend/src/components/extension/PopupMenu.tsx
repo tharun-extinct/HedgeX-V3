@@ -22,9 +22,9 @@ export function PopupMenu() {
       // Get browser info
       const userAgent = navigator.userAgent;
       let browser = 'Unknown';
-      if (userAgent.includes('Chrome')) browser = 'Chrome';
+      if (userAgent.includes('Edg')) browser = 'Edge';
+      else if (userAgent.includes('Chrome')) browser = 'Chrome';
       else if (userAgent.includes('Firefox')) browser = 'Firefox';
-      else if (userAgent.includes('Edge')) browser = 'Edge';
 
       // Check connection to backend
       let connected = false;
@@ -35,8 +35,8 @@ export function PopupMenu() {
         console.error('Connection check failed:', error);
       }
 
-      // Get hostname
-      const hostname = location.hostname || 'STARKツ555';
+      // Get hostname - fallback to default for extension popup
+      const hostname = 'STARKツ555';
 
       setSystemInfo({
         enabled: true,
@@ -49,12 +49,29 @@ export function PopupMenu() {
     fetchSystemInfo();
   }, []);
 
-  const handleOpenApp = () => {
-    // @ts-ignore - Chrome API
-    chrome.tabs.create({ 
-      // @ts-ignore - Chrome API
-      url: chrome.runtime.getURL('index.html')
-    });
+  const handleOpenApp = async () => {
+    try {
+      // Check if user is authenticated by checking Chrome storage
+      const result = await chrome.storage.local.get(['authToken', 'user']);
+      const isAuthenticated = !!(result.authToken && result.user);
+      
+      // Create new tab with the appropriate route
+      const url = chrome.runtime.getURL(isAuthenticated ? 'index.html#/dashboard' : 'index.html#/signin');
+      
+      await chrome.tabs.create({ 
+        url: url
+      });
+      
+      // Close the popup
+      window.close();
+    } catch (error) {
+      console.error('Error opening app:', error);
+      // Fallback: just open the main page
+      chrome.tabs.create({ 
+        url: chrome.runtime.getURL('index.html')
+      });
+      window.close();
+    }
   };
 
   return (

@@ -28,28 +28,44 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // Check if user is already logged in on mount
+  const [isAuthenticated, setIsAuthenticated] = useState(false);  // Check if user is already logged in on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // @ts-ignore - Chrome API
-        const result = await chrome.storage.local.get(['user', 'authToken']);
-        if (result.user && result.authToken) {
-          const parsedUser = JSON.parse(result.user);
-          setUser(parsedUser);
-          setIsAuthenticated(true);
-          // Set token in authService
-          authService.setToken(result.authToken);
+        // Check if we're in an extension context
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+          const result = await chrome.storage.local.get(['user', 'authToken']);
+          if (result.user && result.authToken) {
+            const parsedUser = JSON.parse(result.user);
+            setUser(parsedUser);
+            setIsAuthenticated(true);
+            // Set token in authService
+            authService.setToken(result.authToken);
+          }
+        } else {
+          // Fallback for development/testing
+          const storedUser = localStorage.getItem('user');
+          const storedToken = localStorage.getItem('authToken');
+          if (storedUser && storedToken) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+            setIsAuthenticated(true);
+            authService.setToken(storedToken);
+          }
         }
       } catch (error) {
         console.error('Error checking auth:', error);
-        // @ts-ignore - Chrome API
-        chrome.storage.local.remove(['user', 'authToken']);
+        // Clear invalid auth data
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+          chrome.storage.local.remove(['user', 'authToken']);
+        } else {
+          localStorage.removeItem('user');
+          localStorage.removeItem('authToken');
+        }
       }
     };
     checkAuth();
-  }, []);// Login function
+  }, []);  // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await authService.login(email, password);
@@ -59,7 +75,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const user = { email, name: email.split('@')[0] }; // You can decode JWT to get more user info
       setUser(user);
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Store in Chrome storage if available, otherwise localStorage
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        await chrome.storage.local.set({
+          user: JSON.stringify(user),
+          authToken: response.access_token
+        });
+      } else {
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('authToken', response.access_token);
+      }
       
       toast({
         title: "Login successful",
@@ -76,8 +102,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return false;
     }
-  };
-  // Register function
+  };  // Register function
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
       const response = await authService.register({ name, email, password });
@@ -87,7 +112,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const user = { email, name };
       setUser(user);
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Store in Chrome storage if available, otherwise localStorage
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        await chrome.storage.local.set({
+          user: JSON.stringify(user),
+          authToken: response.access_token
+        });
+      } else {
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('authToken', response.access_token);
+      }
       
       toast({
         title: "Registration successful",
@@ -103,13 +138,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         description: "Email may already be in use. Please try another email.",
       });
       return false;
-    }
-  };
+    }  };
   // Logout function
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('user');
+    
+    // Clear from Chrome storage if available, otherwise localStorage
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      chrome.storage.local.remove(['user', 'authToken']);
+    } else {
+      localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
+    }
+    
     authService.removeToken();
     toast({
       title: "Logged out",

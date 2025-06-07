@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "HedgeX Trading Dashboard",
   "version": "1.0.0",
-  "description": "A comprehensive trading dashboard for market analysis and portfolio management",  "action": {
+  "description": "A comprehensive trading dashboard for market analysis and portfolio management",
+  "action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/favicon-16x16.png",
@@ -20,16 +21,16 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "icons/apple-touch-icon.png",
-        "icons/android-chrome-192x192.png",
-        "icons/android-chrome-512x512.png",
-        "icons/favicon.ico"
+        "index.html",
+        "assets/*",
+        "icons/*"
       ],
       "matches": ["<all_urls>"]
     }
   ],
   "permissions": [
     "storage",
+    "tabs",
     "identity"
   ],
   "host_permissions": [
