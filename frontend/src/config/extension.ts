@@ -3,8 +3,8 @@ export const EXTENSION_CONFIG = {
   API_URL: 'http://localhost:8000',
   
   // Extension settings
-  POPUP_WIDTH: 800,
-  POPUP_HEIGHT: 600,
+  POPUP_WIDTH: 320,
+  POPUP_HEIGHT: 400,
   
   // Authentication
   TOKEN_STORAGE_KEY: 'authToken',
