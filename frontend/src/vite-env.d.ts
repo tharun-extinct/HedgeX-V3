@@ -26,9 +26,9 @@ declare namespace chrome {
     function create(createProperties: CreateProperties): Promise<Tab>;
     function query(queryInfo: any): Promise<Tab[]>;
   }
-  
-  namespace runtime {
+    namespace runtime {
     function getURL(path: string): string;
+    function sendMessage(message: any): Promise<any>;
     const lastError: chrome.runtime.LastError | undefined;
   }
 }

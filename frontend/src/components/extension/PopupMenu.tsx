@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { SessionManager } from '@/utils/sessionManager';
 import '@/styles/popup.css';
 
 interface SystemInfo {
@@ -48,15 +49,13 @@ export function PopupMenu() {
 
     fetchSystemInfo();
   }, []);
-
   const handleOpenApp = async () => {
     try {
-      // Check if user is authenticated by checking Chrome storage
-      const result = await chrome.storage.local.get(['authToken', 'user']);
-      const isAuthenticated = !!(result.authToken && result.user);
+      // Check authentication status
+      const isAuthenticated = await SessionManager.isAuthenticated();
       
       // Create new tab with the appropriate route
-      const url = chrome.runtime.getURL(isAuthenticated ? 'index.html#/dashboard' : 'index.html#/signin');
+      const url = chrome.runtime.getURL(isAuthenticated ? 'index.html#/' : 'index.html#/signin');
       
       await chrome.tabs.create({ 
         url: url

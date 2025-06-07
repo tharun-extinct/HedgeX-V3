@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import { authService } from '@/services/authService';
+import { SessionManager } from '@/utils/sessionManager';
 
 interface User {
   email: string;
@@ -32,36 +33,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Check if we're in an extension context
-        if (typeof chrome !== 'undefined' && chrome.storage) {
-          const result = await chrome.storage.local.get(['user', 'authToken']);
-          if (result.user && result.authToken) {
-            const parsedUser = JSON.parse(result.user);
-            setUser(parsedUser);
-            setIsAuthenticated(true);
-            // Set token in authService
-            authService.setToken(result.authToken);
-          }
-        } else {
-          // Fallback for development/testing
-          const storedUser = localStorage.getItem('user');
-          const storedToken = localStorage.getItem('authToken');
-          if (storedUser && storedToken) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-            setIsAuthenticated(true);
-            authService.setToken(storedToken);
-          }
+        const session = await SessionManager.getAuthSession();
+        if (session && session.token) {
+          setUser(session.user);
+          setIsAuthenticated(true);
+          // Set token in authService
+          authService.setToken(session.token);
         }
       } catch (error) {
         console.error('Error checking auth:', error);
         // Clear invalid auth data
-        if (typeof chrome !== 'undefined' && chrome.storage) {
-          chrome.storage.local.remove(['user', 'authToken']);
-        } else {
-          localStorage.removeItem('user');
-          localStorage.removeItem('authToken');
-        }
+        await SessionManager.clearAuthSession();
       }
     };
     checkAuth();
@@ -76,16 +58,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(user);
       setIsAuthenticated(true);
       
-      // Store in Chrome storage if available, otherwise localStorage
-      if (typeof chrome !== 'undefined' && chrome.storage) {
-        await chrome.storage.local.set({
-          user: JSON.stringify(user),
-          authToken: response.access_token
-        });
-      } else {
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('authToken', response.access_token);
-      }
+      // Store session data
+      await SessionManager.setAuthSession(response.access_token, user);
       
       toast({
         title: "Login successful",
@@ -100,29 +74,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         description: "Invalid email or password. Please try again.",
         variant: "destructive",
       });
-      return false;
-    }
-  };  // Register function
+      return false;    }
+  };
+  
+  // Register function
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
       const response = await authService.register({ name, email, password });
       authService.setToken(response.access_token);
-      
-      // Save user info
+        // Save user info
       const user = { email, name };
       setUser(user);
       setIsAuthenticated(true);
       
-      // Store in Chrome storage if available, otherwise localStorage
-      if (typeof chrome !== 'undefined' && chrome.storage) {
-        await chrome.storage.local.set({
-          user: JSON.stringify(user),
-          authToken: response.access_token
-        });
-      } else {
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('authToken', response.access_token);
-      }
+      // Store session data
+      await SessionManager.setAuthSession(response.access_token, user);
       
       toast({
         title: "Registration successful",
@@ -138,19 +104,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         description: "Email may already be in use. Please try another email.",
       });
       return false;
-    }  };
-  // Logout function
-  const logout = () => {
+    }  };  // Logout function
+  const logout = async () => {
     setUser(null);
     setIsAuthenticated(false);
     
-    // Clear from Chrome storage if available, otherwise localStorage
-    if (typeof chrome !== 'undefined' && chrome.storage) {
-      chrome.storage.local.remove(['user', 'authToken']);
-    } else {
-      localStorage.removeItem('user');
-      localStorage.removeItem('authToken');
-    }
+    // Clear session data
+    await SessionManager.clearAuthSession();
     
     authService.removeToken();
     toast({

@@ -1,4 +1,5 @@
 const API_URL = 'http://localhost:8000';  // Update this to match your backend URL
+import { SessionManager } from '@/utils/sessionManager';
 
 interface LoginResponse {
     access_token: string;
@@ -43,32 +44,37 @@ export const authService = {
 
         return response.json();
     },    // Store the token
-    async setToken(token: string) {
-        // @ts-ignore - Chrome API
-        await chrome.storage.local.set({ authToken: token });
-        // Notify background script
-        // @ts-ignore - Chrome API
-        await chrome.runtime.sendMessage({ type: 'SET_AUTH_TOKEN', token });
+    setToken(token: string) {
+        // This method is kept for compatibility but SessionManager handles storage
+        // Just send message to background script if available
+        try {
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                chrome.runtime.sendMessage({ type: 'SET_AUTH_TOKEN', token }).catch(console.error);
+            }
+        } catch (error) {
+            console.error('Error setting token:', error);
+        }
     },
 
     // Get the stored token
     async getToken(): Promise<string | null> {
-        // @ts-ignore - Chrome API
-        const result = await chrome.storage.local.get(['authToken']);
-        return result.authToken || null;
+        return await SessionManager.getToken();
     },
 
     // Remove the token
     async removeToken() {
-        // @ts-ignore - Chrome API
-        await chrome.storage.local.remove('authToken');
-        // Notify background script
-        // @ts-ignore - Chrome API
-        await chrome.runtime.sendMessage({ type: 'LOGOUT' });
+        await SessionManager.clearAuthSession();
+        try {
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                chrome.runtime.sendMessage({ type: 'LOGOUT' }).catch(console.error);
+            }
+        } catch (error) {
+            console.error('Error removing token:', error);
+        }
     },
 
     // Check if user is authenticated
-    isAuthenticated(): boolean {
-        return !!this.getToken();
+    async isAuthenticated(): Promise<boolean> {
+        return await SessionManager.isAuthenticated();
     }
 };
