@@ -13,23 +13,26 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Import route modules
-from app.routes import auth, trading
 
 # Initialize FastAPI app
 app = FastAPI(title="HedgeX Local API", version="3.0")
 
-# CORS settings for local development
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "vscode-webview://*",  # Allow VS Code webview
         "chrome-extension://*", # Allow Chrome extension
         "edge-extension://*",   # Allow Edge extension
+        'http://localhost:8080'
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# CORS settings for local development
+from app.routes import auth, trading
+
 
 # SQLite database setup
 DB_PATH = Path.home() / ".hedgex" / "data.db"
@@ -38,13 +41,15 @@ DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 def get_db():
     conn = sqlite3.connect(str(DB_PATH))
     try:
-        yield conn
-    finally:
-        conn.close()
+        return conn
+    except:
+        logger.error(f"Database connection error: {e}")
+         
 
 # Initialize database tables
 def init_db():
-    conn = next(get_db())
+    conn =get_db()
+    print(conn,'fdsfdsg')
     cursor = conn.cursor()
     
     # Create users table

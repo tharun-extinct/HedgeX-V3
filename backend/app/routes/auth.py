@@ -9,7 +9,7 @@ from pathlib import Path
 
 # Use Dependency from FastAPI to get database connection
 def get_db():
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(str(DB_PATH),check_same_thread=False)
     try:
         yield conn
     finally:
@@ -62,7 +62,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 # Authentication endpoints
 @router.post("/register", response_model=Token)
 async def register(user: UserCreate, db: sqlite3.Connection = Depends(get_db)):
+    print("register")
     cursor = db.cursor()
+    print(user,'suer')
     
     # Check if user exists
     cursor.execute("SELECT id FROM users WHERE email = ?", (user.email,))

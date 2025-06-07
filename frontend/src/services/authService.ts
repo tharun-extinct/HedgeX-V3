@@ -14,7 +14,7 @@ interface UserRegisterData {
 
 export const authService = {
     async login(email: string, password: string): Promise<LoginResponse> {
-        const response = await fetch(`${API_URL}/login`, {
+        const response = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,18 +30,18 @@ export const authService = {
     },
 
     async register(data: UserRegisterData): Promise<LoginResponse> {
-        const response = await fetch(`${API_URL}/register`, {
+        const response = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         });
-
+        console.log(response.json(),'fsdf');
         if (!response.ok) {
             throw new Error('Registration failed');
         }
-
+        
         return response.json();
     },    // Store the token
     setToken(token: string) {
