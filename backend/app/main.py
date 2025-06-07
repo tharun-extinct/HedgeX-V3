@@ -44,6 +44,7 @@ def get_db():
 
 # Initialize database tables
 def init_db():
+<<<<<<< HEAD
     conn = sqlite3.connect(str(DB_PATH))
     try:
         cursor = conn.cursor()
@@ -75,6 +76,36 @@ def init_db():
         conn.commit()
     finally:
         conn.close()
+=======
+    conn = next(get_db())
+    cursor = conn.cursor()
+    
+    # Create users table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    
+    # Create trading_settings table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS trading_settings (
+            user_id INTEGER PRIMARY KEY,
+            ticker TEXT NOT NULL,
+            interval TEXT NOT NULL,
+            period TEXT NOT NULL,
+            strategy_params JSON NOT NULL,
+            active BOOLEAN DEFAULT FALSE,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    """)
+    
+    conn.commit()
+>>>>>>> e021f8e0cf4115041d1695f40cdd46168b0af44b
 
 # Initialize DB on startup
 @app.on_event("startup")

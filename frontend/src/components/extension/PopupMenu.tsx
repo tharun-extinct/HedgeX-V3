@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-// Import the popup styles directly
 import '@/styles/popup.css';
 
 interface SystemInfo {
@@ -74,17 +73,11 @@ export function PopupMenu() {
       <div className="popup-content">
         <div className="popup-row">
           <span className="popup-label">Enabled:</span>
-          <span className="popup-value">
-            <span className={`status-indicator ${systemInfo.enabled ? 'status-enabled' : 'status-disabled'}`}></span>
-            {systemInfo.enabled ? 'Yes' : 'No'}
-          </span>
+          <span className="popup-value">{systemInfo.enabled ? '✅' : '❌'}</span>
         </div>
         <div className="popup-row">
           <span className="popup-label">Connected:</span>
-          <span className="popup-value">
-            <span className={`status-indicator ${systemInfo.connected ? 'status-enabled' : 'status-disabled'}`}></span>
-            {systemInfo.connected ? 'Yes' : 'No'}
-          </span>
+          <span className="popup-value">{systemInfo.connected ? '✔' : '✘'}</span>
         </div>
         <div className="popup-row">
           <span className="popup-label">Browser:</span>

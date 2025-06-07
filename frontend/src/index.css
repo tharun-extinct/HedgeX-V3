@@ -5,8 +5,8 @@
 
 /* Extension popup dimensions */
 body {
-  width: 320px;
-  height: 400px;
+  width: 800px;
+  height: 600px;
   margin: 0;
   font-family: system-ui, sans-serif;
   overflow-x: hidden;
