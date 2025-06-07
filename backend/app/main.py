@@ -30,9 +30,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # CORS settings for local development
 from app.routes import auth, trading
-
 
 # SQLite database setup
 DB_PATH = Path.home() / ".hedgex" / "data.db"

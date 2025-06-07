@@ -5,28 +5,6 @@ from pathlib import Path
 
 # Get required DLL paths from Anaconda installation
 anaconda_path = Path(os.path.expanduser("~")) / "anaconda3"
-<<<<<<< HEAD
-dll_path = anaconda_path / "Library" / "bin"
-dlls_path = anaconda_path / "DLLs"
-
-dll_binaries = []
-
-# Add all DLLs from Anaconda Library/bin to the root
-for dll in dll_path.glob("*.dll"):
-    dll_binaries.append((str(dll), "."))
-
-# Add all Python extensions from DLLs to the root
-for pyd in dlls_path.glob("*.pyd"):
-    dll_binaries.append((str(pyd), "."))
-
-# Add python312.dll if it exists
-python_dll = anaconda_path / "python312.dll"
-if python_dll.exists():
-    dll_binaries.append((str(python_dll), "."))
-
-# Combine all binaries
-binaries = dll_binaries
-=======
 dll_paths = {
     'sqlite3.dll': anaconda_path / "Library" / "bin" / "sqlite3.dll",
     'libcrypto-3.dll': anaconda_path / "Library" / "bin" / "libcrypto-3.dll",
@@ -42,7 +20,6 @@ dll_paths = {
 
 # Convert paths to strings and create binaries list
 binaries = [(str(path), '.') for path in dll_paths.values() if path.exists()]
->>>>>>> e021f8e0cf4115041d1695f40cdd46168b0af44b
 
 block_cipher = None
 
