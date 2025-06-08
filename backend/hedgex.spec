@@ -27,18 +27,18 @@ a = Analysis(
     ['app/main.py'],
     pathex=['.'],  # Add current directory to Python path
     binaries=binaries,  # Include all required DLLs
-    datas=[],    hiddenimports=[
-        'uvicorn.logging', 'uvicorn.loops', 'uvicorn.loops.auto',
-        'uvicorn.protocols', 'uvicorn.protocols.http', 'uvicorn.protocols.http.auto',
-        'uvicorn.protocols.websockets', 'uvicorn.protocols.websockets.auto',
-        'uvicorn.lifespan', 'uvicorn.lifespan.on',
+    datas=[],    
+    hiddenimports=[
+        'uvicorn.logging', 'uvicorn.loops.auto',
+        'uvicorn.protocols.http.auto',
+        'uvicorn.lifespan.on',
         'sqlite3', '_sqlite3', 'jwt',
-        'cryptography', 'cryptography.hazmat', 'cryptography.hazmat.bindings',
-        'cryptography.hazmat.bindings.openssl', 'cryptography.hazmat.bindings.openssl.binding'
-    ],hookspath=['hooks'],
+        'cryptography.hazmat.bindings.openssl.binding'
+    ],
+    excludes=['matplotlib', 'notebook', 'jupyter', 'scipy', 'PyQt5', 'Pillow', 'tkinter'],
+    hookspath=['hooks'],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -57,7 +57,7 @@ exe = EXE(
     name='HedgeX-Backend',
     debug=False,
     bootloader_ignore_signals=False,
-    strip=False,
+    strip=True,
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
