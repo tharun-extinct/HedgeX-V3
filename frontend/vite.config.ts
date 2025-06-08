@@ -11,6 +11,7 @@ server: {
 },  
 build: {
   outDir: 'dist',
+  sourcemap: true, 
   emptyOutDir: true,
   rollupOptions: {
     input: {
@@ -22,29 +23,29 @@ build: {
       entryFileNames: (chunk) => {
         return chunk.name === 'background' ? '[name].js' : 'assets/[name]-[hash].js';
       },
-      manualChunks(id) {
-        // Popup-specific code and minimal dependencies
-        if (id.includes('popup.tsx') || id.includes('PopupMenu.tsx') || 
-            (id.includes('components/ui') && id.includes('button.tsx'))) {
-          return 'popup';
-        }
-        // Main app features
-        if (id.includes('pages/') || id.includes('components/dashboard/')) {
-          return 'app';
-        }
-        // Core React dependencies
-        if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-          return 'vendor-react';
-        }
-        // UI framework dependencies
-        if (id.includes('@radix-ui/') || id.includes('lucide-react')) {
-          return 'vendor-ui';
-        }
-        // Other dependencies
-        if (id.includes('node_modules')) {
-          return 'vendor-deps';
-        }
-      }
+      // manualChunks(id) {
+      //   // Popup-specific code and minimal dependencies
+      //   if (id.includes('popup.tsx') || id.includes('PopupMenu.tsx') || 
+      //       (id.includes('components/ui') && id.includes('button.tsx'))) {
+      //     return 'popup';
+      //   }
+      //   // Main app features
+      //   if (id.includes('pages/') || id.includes('components/dashboard/')) {
+      //     return 'app';
+      //   }
+      //   // Core React dependencies
+      //    if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/scheduler')) {
+      //       return 'vendor-react';
+      //     }
+      //   // UI framework dependencies
+      //   if (id.includes('@radix-ui/') || id.includes('lucide-react')) {
+      //     return 'vendor-ui';
+      //   }
+      //   // Other dependencies
+      //   if (id.includes('node_modules')) {
+      //     return 'vendor-deps';
+      //   }
+      // }
     }
   },
   chunkSizeWarningLimit: 1000,
