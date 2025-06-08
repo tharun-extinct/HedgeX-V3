@@ -8,6 +8,52 @@ applyTo: 'HedgeX'
 
 HedgeX is a high frequency trading software built exclusively as a browser extension that integrates with Zerodha Kite API. It specializes in algorithmic trading strategies for NIFTY 50 stocks only, offering microsecond execution speeds, advanced market signal processing, and automated decision making for optimal trade execution.
 
+## Environment Setup
+
+### Python Environment
+- **Environment Type**: Standard Python virtual environment (NOT Conda)
+- **Location**: `backend\venv`
+- **Activation**: Uses `activate.bat`
+- **Package Manager**: pip (Python package installer)
+- **Verification**: Contains `venv\Scripts\activate.bat`
+
+### Build Scripts & Optimization
+- `build.ps1`: Original build script (legacy, incorrect Anaconda paths - needs correction)
+- `build-optimized-main.ps1`: **RECOMMENDED** - Corrected and optimized main build script
+- `build-small.ps1`: Size-optimized build script with UPX compression
+- `build-optimized.ps1`: Alternative optimized build with selective exclusions
+- `build-optimized-v2.ps1`: Advanced build script with parameter support and comprehensive optimization
+- **Executable Size Achievement**: Reduced from 450MB to 18.02MB (95%+ reduction)
+- **PyInstaller Spec**: `hedgex.spec` optimized with proper excludes and Windows compatibility
+
+### Build Process Corrections
+- **Environment Fix**: Original `build.ps1` incorrectly references Anaconda paths
+- **Correct Environment**: Project uses standard Python venv at `backend\venv\`
+- **DLL Handling**: Corrected to use system DLLs instead of Anaconda-specific libraries
+- **Activation Method**: Uses `venv\Scripts\Activate.ps1` instead of Conda activation
+- **Recommended Script**: Use `build-optimized-main.ps1` for reliable builds
+
+### Build Optimization Details
+- **Size Reduction Techniques**: Module exclusion, UPX compression, selective imports
+- **Windows Compatibility**: `strip=False` for Windows builds, proper DLL handling
+- **Excluded Modules**: Test frameworks, documentation, unused packages (tkinter, PIL, etc.)
+- **Compression**: UPX compression enabled for further size reduction
+- **Error Handling**: Comprehensive error checking and colored output in build scripts
+
+### Build Troubleshooting
+- **"Anaconda not found" errors**: Use `build-optimized-main.ps1` instead of `build.ps1`
+- **Large executable size**: Ensure `hedgex.spec` contains proper excludes list
+- **Missing DLLs**: Check Windows system DLLs instead of Anaconda libraries
+- **Virtual environment issues**: Verify `backend\venv\Scripts\activate.bat` exists
+- **PyInstaller errors**: Ensure virtual environment is activated before building
+
+### Things Generative AI Should Know
+1. The project uses standard Python venv, not Conda environment
+2. PyInstaller is used to create standalone executables
+3. Multiple build scripts exist for different optimization levels
+4. The backend uses FastAPI with SQLite database
+5. Frontend is a React application that can run as both web app and browser extension
+
 ### Architecture Overview
 
 - **Browser Extension**: Chrome/Edge Extension with Manifest V3

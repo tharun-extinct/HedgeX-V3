@@ -2,22 +2,34 @@
 import os
 import sys
 from pathlib import Path
+import site
 
 DIST_PATH = 'release'
 
-# Get required DLL paths from Anaconda installation
-anaconda_path = Path(os.path.expanduser("~")) / "anaconda3"
+# Get Python installation paths - works with standard venv instead of Anaconda
+python_path = Path(sys.executable).parent
+site_packages = Path(site.getsitepackages()[0])
+dll_dir = python_path  # DLLs usually in the same directory as python.exe in standard venv
+
+# Use system DLLs for Windows - more reliable than Anaconda paths
+system_dll_dir = Path(os.environ.get('SystemRoot', 'C:\\Windows')) / 'System32'
+
 dll_paths = {
-    'sqlite3.dll': anaconda_path / "Library" / "bin" / "sqlite3.dll",
-    'libcrypto-3.dll': anaconda_path / "Library" / "bin" / "libcrypto-3.dll",
-    'libssl-3.dll': anaconda_path / "Library" / "bin" / "libssl-3.dll",
-    'libffi-8.dll': anaconda_path / "Library" / "bin" / "libffi-8.dll",
-    'zlib.dll': anaconda_path / "Library" / "bin" / "zlib.dll",
-    '_ctypes.pyd': anaconda_path / "DLLs" / "_ctypes.pyd",
-    'libexpat.dll': anaconda_path / "Library" / "bin" / "libexpat.dll",
-    'libbz2.dll': anaconda_path / "Library" / "bin" / "libbz2.dll",
-    'liblzma.dll': anaconda_path / "Library" / "bin" / "liblzma.dll",
-    'api-ms-win-core-path-l1-1-0.dll': anaconda_path / "Library" / "bin" / "api-ms-win-core-path-l1-1-0.dll"
+    # System DLLs
+    'vcruntime140.dll': system_dll_dir / 'vcruntime140.dll',
+    'msvcp140.dll': system_dll_dir / 'msvcp140.dll',
+    'ucrtbase.dll': system_dll_dir / 'ucrtbase.dll',
+    
+    # Python DLLs
+    'sqlite3.dll': dll_dir / 'sqlite3.dll',
+    'libssl-3.dll': dll_dir / 'libssl-3.dll',
+    'libcrypto-3.dll': dll_dir / 'libcrypto-3.dll',
+    'libffi-8.dll': dll_dir / 'libffi-8.dll',
+    'zlib.dll': dll_dir / 'zlib.dll',
+    '_ctypes.pyd': dll_dir / 'lib/site-packages/_ctypes.pyd',
+    'libexpat.dll': dll_dir / 'libexpat.dll',
+    'libbz2.dll': dll_dir / 'libbz2.dll',
+    'liblzma.dll': dll_dir / 'liblzma.dll'
 }
 
 # Convert paths to strings and create binaries list
