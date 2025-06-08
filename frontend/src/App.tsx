@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import HomePage from "./pages/HomePage";
 import SignIn from "./pages/SignIn";
@@ -17,7 +17,12 @@ const queryClient = new QueryClient();
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated,loading } = useAuth();
+  if (loading)   return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
   return isAuthenticated ? <>{children}</> : <Navigate to="/signin" />;
 };
 
@@ -25,7 +30,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
-        <HashRouter>
+        <BrowserRouter>
           <div className="extension-container">            <Routes>
               <Route 
                 path="/dashboard" 
@@ -56,7 +61,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
-        </HashRouter>
+        </BrowserRouter>
         <Toaster />
         <Sonner />
       </TooltipProvider>

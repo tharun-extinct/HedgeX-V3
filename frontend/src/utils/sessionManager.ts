@@ -21,7 +21,7 @@ export class SessionManager {
         });
       } else {
         // Fallback to sessionStorage for development
-        sessionStorage.setItem(this.SESSION_KEY, JSON.stringify({
+        localStorage.setItem(this.SESSION_KEY, JSON.stringify({
           token,
           user: JSON.stringify(user),
           timestamp: Date.now()
@@ -30,7 +30,7 @@ export class SessionManager {
     } catch (error) {
       console.error('Error setting auth session:', error);
       // Fallback to sessionStorage
-      sessionStorage.setItem(this.SESSION_KEY, JSON.stringify({
+      localStorage.setItem(this.SESSION_KEY, JSON.stringify({
         token,
         user: JSON.stringify(user),
         timestamp: Date.now()
@@ -80,11 +80,11 @@ export class SessionManager {
       if (typeof chrome !== 'undefined' && chrome.storage) {
         await chrome.storage.local.remove([this.SESSION_KEY]);
       } else {
-        sessionStorage.removeItem(this.SESSION_KEY);
+        localStorage.removeItem(this.SESSION_KEY);
       }
     } catch (error) {
       console.error('Error clearing auth session:', error);
-      sessionStorage.removeItem(this.SESSION_KEY);
+      localStorage.removeItem(this.SESSION_KEY);
     }
   }
 

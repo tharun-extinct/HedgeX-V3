@@ -15,6 +15,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  loading:boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => false,
   register: async () => false,
   logout: () => {},
+  loading: true
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -30,6 +32,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Check if user is already logged in on mount
+  const [loading, setLoading] = useState(true);  
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -44,6 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.error('Error checking auth:', error);
         // Clear invalid auth data
         await SessionManager.clearAuthSession();
+      }finally {
+          setLoading(false);
       }
     };
     checkAuth();
@@ -118,9 +123,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       description: "You have been successfully logged out.",
     });
   };
-
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout,loading }}>
       {children}
     </AuthContext.Provider>
   );
