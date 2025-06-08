@@ -57,7 +57,10 @@ class KiteService {
   private baseUrl = 'https://api.kite.trade';
 
   constructor() {
-    this.config = this.loadConfig();
+    this.config = { apiKey: '', apiSecret: '' };
+    this.loadConfig().then(config => {
+      this.config = config;
+    });
   }
 
   // Load Kite API configuration from Chrome storage

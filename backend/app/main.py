@@ -49,7 +49,7 @@ def get_db():
 # Initialize database tables
 def init_db():
     conn =get_db()
-    print(conn,'fdsfdsg')
+    print('Connection Object', conn)
     cursor = conn.cursor()
     
     # Create users table

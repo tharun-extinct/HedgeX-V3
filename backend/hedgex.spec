@@ -3,6 +3,8 @@ import os
 import sys
 from pathlib import Path
 
+DIST_PATH = 'release'
+
 # Get required DLL paths from Anaconda installation
 anaconda_path = Path(os.path.expanduser("~")) / "anaconda3"
 dll_paths = {
@@ -27,15 +29,19 @@ a = Analysis(
     ['app/main.py'],
     pathex=['.'],  # Add current directory to Python path
     binaries=binaries,  # Include all required DLLs
-    datas=[],    
-    hiddenimports=[
+    datas=[],      hiddenimports=[
         'uvicorn.logging', 'uvicorn.loops.auto',
         'uvicorn.protocols.http.auto',
         'uvicorn.lifespan.on',
         'sqlite3', '_sqlite3', 'jwt',
         'cryptography.hazmat.bindings.openssl.binding'
     ],
-    excludes=['matplotlib', 'notebook', 'jupyter', 'scipy', 'PyQt5', 'Pillow', 'tkinter'],
+    excludes=[
+        'matplotlib', 'notebook', 'jupyter', 'scipy', 'PyQt5', 'Pillow', 'tkinter',
+        'pandas.tests', 'numpy.tests', 'test', 'tests', 'IPython', 'lib2to3',
+        'pygments', 'docutils', 'sphinx', 'pytest', 'mypy', 'pandas.io.formats.style', 
+        'pandas.io.excel._xlsxwriter', 'pandas.io.excel._openpyxl'
+    ],
     hookspath=['hooks'],
     hooksconfig={},
     runtime_hooks=[],
@@ -55,9 +61,10 @@ exe = EXE(
     a.datas,
     [],
     name='HedgeX-Backend',
+    distpath=DIST_PATH,
     debug=False,
     bootloader_ignore_signals=False,
-    strip=True,
+    strip=False,  # Set to False on Windows
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
