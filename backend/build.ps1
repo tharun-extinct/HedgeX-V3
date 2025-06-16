@@ -1,3 +1,4 @@
+# Deprecated
 # Create required directories
 Write-Host "Creating required directories..."
 New-Item -ItemType Directory -Path "hooks" -Force | Out-Null
