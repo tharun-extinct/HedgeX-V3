@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 import site
 
-DIST_PATH = 'release'
+DIST_PATH = 'dist'
 
 # Get Python installation paths - works with standard venv instead of Anaconda
 python_path = Path(sys.executable).parent
@@ -41,12 +41,40 @@ a = Analysis(
     ['app/main.py'],
     pathex=['.'],  # Add current directory to Python path
     binaries=binaries,  # Include all required DLLs
-    datas=[],      hiddenimports=[
-        'uvicorn.logging', 'uvicorn.loops.auto',
-        'uvicorn.protocols.http.auto',
-        'uvicorn.lifespan.on',
-        'sqlite3', '_sqlite3', 'jwt',
-        'cryptography.hazmat.bindings.openssl.binding'
+    datas=[],      
+    hiddenimports=[
+        # Uvicorn imports
+        'uvicorn.logging', 'uvicorn.loops.auto', 'uvicorn.loops.asyncio',
+        'uvicorn.protocols.http.auto', 'uvicorn.protocols.http.h11_impl',
+        'uvicorn.protocols.http.httptools_impl', 'uvicorn.lifespan.on',
+        'uvicorn.lifespan.off', 'uvicorn.config', 'uvicorn.main',
+        
+        # FastAPI imports
+        'fastapi', 'fastapi.middleware.cors', 'fastapi.responses',
+        'fastapi.routing', 'fastapi.dependencies', 'fastapi.exceptions',
+        
+        # SQL and database
+        'sqlite3', '_sqlite3', 'jwt', 'bcrypt',
+        
+        # Cryptography and security
+        'cryptography.hazmat.bindings.openssl.binding',
+        'cryptography.hazmat.primitives', 'cryptography.hazmat.backends',
+        
+        # Click (used by uvicorn)
+        'click', 'click.core', 'click.types', 'click._compat', 'click._winconsole',
+        
+        # Ctypes and system modules
+        'ctypes', 'ctypes.util', 'ctypes.wintypes', 'ctypes.macholib',
+        '_ctypes', '_ctypes_test',
+        
+        # Additional modules that might be needed
+        'pydantic', 'pydantic.main', 'pydantic.fields', 'pydantic.validators',
+        'python_jose', 'python_jose.jwt', 'python_jose.jwe', 'python_jose.jwk',
+        'aiofiles', 'python_multipart',
+        
+        # Route modules
+        'app.routes.auth', 'app.routes.trading', 'app.routes.health',
+        'app.cors_config'
     ],
     excludes=[
         'matplotlib', 'notebook', 'jupyter', 'scipy', 'PyQt5', 'Pillow', 'tkinter',
@@ -56,7 +84,7 @@ a = Analysis(
     ],
     hookspath=['hooks'],
     hooksconfig={},
-    runtime_hooks=[],
+    runtime_hooks=['runtime_hook.py'],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
